@@ -64,7 +64,7 @@ DWORD WINAPI a(LPVOID pVoid)
 
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "a"  << flush;
+        cout << "a" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
 
@@ -80,7 +80,7 @@ DWORD WINAPI b(LPVOID pVoid)
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(sem_B, INFINITE);
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "b"  << flush;
+        cout << "b" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
         ReleaseSemaphore(sem_C, 1, NULL);
@@ -97,7 +97,7 @@ DWORD WINAPI c(LPVOID pVoid)
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(sem_C, INFINITE);
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "c"  << flush;
+        cout << "c" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
         ReleaseSemaphore(sem_D, 1, NULL);
@@ -116,17 +116,19 @@ DWORD WINAPI d(LPVOID pVoid)
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(sem_D, INFINITE);
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "d"  << flush;
+        cout << "d" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
         ReleaseSemaphore(sem_B, 1, NULL);
     }
     
+        WaitForSingleObject(sem_B, INFINITE);
+        ReleaseSemaphore(segmentEnd, 1, NULL);
         WaitForSingleObject(sem_D, INFINITE);
+        
     for (int i = 0;i < 3;i++) {
-
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "d"  << flush;
+        cout << "d" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -145,7 +147,7 @@ DWORD WINAPI e(LPVOID pVoid)
 {
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "e"  << flush;
+        cout << "e" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -161,7 +163,7 @@ DWORD WINAPI f(LPVOID pVoid)
 {
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "f"  << flush;
+        cout << "f" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -202,7 +204,7 @@ DWORD WINAPI h(LPVOID pVoid)
 {
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "h"  << flush;
+        cout << "h" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -213,7 +215,7 @@ DWORD WINAPI h(LPVOID pVoid)
     
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "h"  << flush;
+        cout << "h" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -227,7 +229,7 @@ DWORD WINAPI i(LPVOID pVoid)
 {
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "i"  << flush;
+        cout << "i" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -241,7 +243,7 @@ DWORD WINAPI k(LPVOID pVoid)
 {
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "k"  << flush;
+        cout << "k" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -252,7 +254,7 @@ DWORD WINAPI k(LPVOID pVoid)
     
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "k"  << flush;
+        cout << "k" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -267,7 +269,7 @@ DWORD WINAPI m(LPVOID pVoid)
 {
     for (int i = 0;i < 3;i++) {
         WaitForSingleObject(stdout_mutex, INFINITE);
-        cout << "m"  << flush;
+        cout << "m" << flush;
         ReleaseMutex(stdout_mutex);
         computation();
     }
@@ -349,6 +351,8 @@ int lab3_init()
     WaitForSingleObject(bThread, INFINITE);
     WaitForSingleObject(cThread, INFINITE);
     
+    
+    WaitForSingleObject(segmentEnd, INFINITE);
     ReleaseSemaphore(sem_D, 1, NULL);
     
     eThread = CreateThread(NULL, 0,(e),0, 0, &IDThread);
@@ -362,10 +366,10 @@ int lab3_init()
     WaitForSingleObject(eThread, INFINITE);
     WaitForSingleObject(dThread, INFINITE);
     
-        ReleaseSemaphore(sem_G, 1, NULL);
+        
 
-        WaitForSingleObject(segmentEnd, INFINITE);
-    
+    WaitForSingleObject(segmentEnd, INFINITE);
+    ReleaseSemaphore(sem_G, 1, NULL);
     
     fThread = CreateThread(NULL, 0,(f),0, 0, &IDThread);
     if (fThread == NULL)
@@ -378,9 +382,10 @@ int lab3_init()
     WaitForSingleObject(fThread, INFINITE);
     WaitForSingleObject(gThread, INFINITE);
     
-        ReleaseSemaphore(sem_H, 1, NULL);
 
-        WaitForSingleObject(segmentEnd, INFINITE);
+
+    WaitForSingleObject(segmentEnd, INFINITE);
+    ReleaseSemaphore(sem_H, 1, NULL);
         
     iThread = CreateThread(NULL, 0,(i),0, 0, &IDThread);
     if (iThread == NULL)
@@ -394,9 +399,11 @@ int lab3_init()
     WaitForSingleObject(hThread, INFINITE);
     WaitForSingleObject(iThread, INFINITE);
     
-        ReleaseSemaphore(sem_K, 1, NULL);
-
-        WaitForSingleObject(segmentEnd, INFINITE);
+    
+    
+    WaitForSingleObject(segmentEnd, INFINITE);
+    ReleaseSemaphore(sem_K, 1, NULL);
+    
     
     mThread = CreateThread(NULL, 0,(m),0, 0, &IDThread);
     if (mThread == NULL)
